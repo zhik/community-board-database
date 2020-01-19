@@ -1,17 +1,13 @@
-version: '2.1'
+version: '3'
 services:
   postgres:
     image: kartoza/postgis:12.0
+    hostname: postgres
     ports:
       - 5432:5432
     container_name: community-board-db-postgres
     env_file:
       - .env
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
-      interval: 10s
-      timeout: 5s
-      retries: 5
   server:
     build: ./server
     ports:
@@ -20,7 +16,9 @@ services:
       - ./server/src:/server/src
     container_name: community-board-db-server
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
+    environment:
+      WAIT_HOSTS: postgres:5432
+      WAIT_AFTER_HOSTS: 2
     env_file:
       - .env

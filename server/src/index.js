@@ -1,9 +1,10 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import init from './database/index'
+import Database from './database/index'
 
+const database = new Database()
 const app = express()
-init()
+database.test()
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
