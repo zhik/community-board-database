@@ -31,13 +31,14 @@
     shadowUrl: markerShadow
   })
 
+  import { requestsPoints } from '../stores.js'
+
   let container
   let map
   let layer
-  let response = fetchRequest()
 
   onMount(() => {
-    map = L.map(container, {}).setView([51.505, -0.09], 13)
+    map = L.map(container, {}).setView([40.7128, -74.0034], 13)
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -46,59 +47,22 @@
     }).addTo(map)
   })
 
-  async function fetchRequest() {
-    return await fetch('http://localhost:5000/requests')
-      .then(res => res.json())
-      .then(requests => {
-        return requests
-          .filter(request => request.location)
-          .reduce((features, request) => {
-            return [
-              ...features,
-              {
-                type: 'Feature',
-                properties: {
-                  id: request.id,
-                  ...JSON.parse(request.json)
-                },
-                geometry: {
-                  type: request.location.type,
-                  coordinates: request.location.coordinates.reverse()
-                }
-              }
-            ]
-          }, [])
-      })
-      .then(features => {
-        response = {
-          type: 'FeatureCollection',
-          features: features
-        }
-      })
-  }
+  $: if ($requestsPoints.features.length && map) {
+    if (layer) map.removeLayer(layer)
 
-  function isPromise(p) {
-    return p && Object.prototype.toString.call(p) === '[object Promise]'
-  }
+    layer = L.geoJSON($requestsPoints, {
+      onEachFeature: (feature, layer) => {
+        const table = Object.keys(feature.properties)
+          .map(function(key) {
+            return `<p><b>${key}</b>: ${feature.properties[key]}</p>`
+          })
+          .join('')
+        layer.bindPopup(table)
+      }
+    }).addTo(map)
 
-  $: {
-    if (map && !isPromise(response)) {
-      //remove previous layer
-      if (layer) map.removeLayer(layer)
-
-      layer = L.geoJSON(response, {
-        onEachFeature: (feature, layer) => {
-          const table = Object.keys(feature.properties)
-            .map(function(key) {
-              return `<p><b>${key}</b>: ${feature.properties[key]}</p>`
-            })
-            .join('')
-          layer.bindPopup(table)
-        }
-      }).addTo(map)
-      const group = new L.featureGroup([layer])
-      map.fitBounds(group.getBounds())
-    }
+    const group = new L.featureGroup([layer])
+    map.fitBounds(group.getBounds())
   }
 </script>
 
