@@ -19,6 +19,15 @@ services:
       - postgres
     environment:
       WAIT_HOSTS: postgres:5432
-      WAIT_AFTER_HOSTS: 2
+      WAIT_AFTER_HOSTS: 1
     env_file:
       - .env
+  client:
+    build: ./client
+    ports:
+      - 3000:3000
+    container_name: community-board-db-client
+    volumes: #for dev only
+      - ./client/src:/client/src
+    depends_on:
+      - server
