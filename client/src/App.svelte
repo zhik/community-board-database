@@ -1,41 +1,54 @@
 <script>
+  import { Router,Route, Navigate } from 'svelte-router-spa'
+  import { routes } from './routes'
   import 'bulma/css/bulma.css'
   import { Field, Input } from 'svelma'
-  export let name
+
+  export let currentRoute
+
 </script>
 
-<main>
-  <h1>Hello {name}!</h1>
-  <p>
-    Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn
-    how to build Svelte apps.
-  </p>
-
-  <form action="">
-    <Field label="Name">
-      <Input type="text" value="test" placeholder="Text input" />
-    </Field>
-  </form>
-</main>
+<div class="app">
+  <nav>
+    <ul>
+      <li>
+        <Navigate to="/">Home</Navigate>
+      </li>
+      <li>
+        <Navigate to="/browse">Browse</Navigate>
+      </li>
+      <li>
+        <Navigate to="/new">New</Navigate>
+      </li>
+      <li>
+        <Navigate to="/map">Map</Navigate>
+      </li>
+    </ul>
+  </nav>
+  <div class="content">
+    <Router {currentRoute} {routes} />
+  </div>
+</div>
 
 <style>
-  main {
-    text-align: center;
-    padding: 1em;
-    max-width: 240px;
-    margin: 0 auto;
-  }
+.app{
+  display: flex;
+  flex-wrap: wrap;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
 
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
-  }
+nav {
+  margin: 2em;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  position: relative;
+}
 
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
-  }
+.content{
+  margin: 2em;
+  flex: 999 1 600px;
+  min-height: 600px;
+}
 </style>

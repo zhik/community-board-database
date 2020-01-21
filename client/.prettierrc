@@ -6,5 +6,9 @@
   "bracketSpacing": true,
   "tabWidth": 2,
   "trailingComma": "none",
-  "printWidth": 100
+  "printWidth": 100,
+  "svelteSortOrder": "styles-scripts-markup",
+  "svelteStrictMode": true,
+  "svelteBracketNewLine": true,
+  "svelteAllowShorthand": false
 }
