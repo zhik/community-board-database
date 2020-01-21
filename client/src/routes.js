@@ -3,7 +3,7 @@ import NotFound from './layouts/notFound.svelte'
 import Browse from './layouts/browse.svelte'
 import Edit from './layouts/edit.svelte'
 import New from './layouts/new.svelte'
-import LeafletMap from './layouts/leafletMap.svelte'
+import MapC from './layouts/map.svelte'
 
 const routes = [
   { name: '/', component: Index },
@@ -16,7 +16,7 @@ const routes = [
     ]
   },
   { name: 'new', component: New },
-  { name: 'map', component: LeafletMap }
+  { name: 'map', component: MapC }
 ]
 
 export { routes }

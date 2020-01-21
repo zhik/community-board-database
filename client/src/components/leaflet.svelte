@@ -1,7 +1,7 @@
 <style>
   #map {
     width: 100%;
-    height: 70%;
+    height: 100%;
   }
   :global(.leaflet-popup-content) {
     overflow: auto;
@@ -31,11 +31,14 @@
     shadowUrl: markerShadow
   })
 
-  import { requestsPoints } from '../stores.js'
+  export let data = {
+    type: 'FeatureCollection',
+    features: []
+  }
 
-  let container
   let map
   let layer
+  let container
 
   onMount(() => {
     map = L.map(container, {}).setView([40.7128, -74.0034], 13)
@@ -47,10 +50,10 @@
     }).addTo(map)
   })
 
-  $: if ($requestsPoints.features.length && map) {
+  $: if (data.features.length && map) {
     if (layer) map.removeLayer(layer)
 
-    layer = L.geoJSON($requestsPoints, {
+    layer = L.geoJSON(data, {
       onEachFeature: (feature, layer) => {
         const table = Object.keys(feature.properties)
           .map(function(key) {
@@ -66,6 +69,4 @@
   }
 </script>
 
-<h3 class="title is-3">Map</h3>
-<h6 class="subtitle is-6">View locations of requests</h6>
 <div id="map" bind:this="{container}"></div>
