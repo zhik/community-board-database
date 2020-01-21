@@ -25,12 +25,18 @@
   import { Router, Route, Navigate } from 'svelte-router-spa'
   import { routes } from './routes'
   import 'bulma/css/bulma.css'
+  import { Snackbar } from 'svelma'
   import { requests } from './stores'
 
   $: {
     //todo: get url from env
-    //todo: error message
-    //todo: sync/ loading toast
+    const loading = Snackbar.create({
+      message: '...loading data',
+      type: 'is-white',
+      position: 'is-top-right',
+      duration: 100000
+    })
+
     fetch('http://localhost:5000/requests')
       .then(res => res.json())
       .then(requests => {
@@ -39,7 +45,18 @@
           return request
         })
       })
-      .then(data => requests.set(data))
+      .then(data => {
+        requests.set(data)
+        loading.$destroy()
+      })
+      .catch(error =>
+        Snackbar.create({
+          message: error.message,
+          type: 'is-danger',
+          actionText: 'retry',
+          position: 'is-top-right'
+        })
+      )
   }
   export let currentRoute
 </script>
