@@ -22,7 +22,7 @@
 </style>
 
 <script>
-  import { Field, Input, Button } from 'svelma'
+  import Button from 'svelma/src/components/Button.svelte'
   import DateTimeInput from '../components/dateTimeInput.svelte'
   import OrganizationSelect from '../components/organizationSelect.svelte'
   import ContactSelect from '../components/contactSelect.svelte'
@@ -76,7 +76,8 @@
   <div class="form-panel">
     <div class="panel-top">
       <div class="panel2-left">
-        <Field label="Status">
+        <div class="field">
+          <label for="status" class="label">Status</label>
           <div class="select">
             <select bind:value="{form['Status']}">
               {#each statuses as status}
@@ -84,7 +85,7 @@
               {/each}
             </select>
           </div>
-        </Field>
+        </div>
         <DateTimeInput label="Date Opened" id="date-opened" bind:datetime="{form['Date Opened']}" />
         <OrganizationSelect
           label="Primary Agency"
@@ -96,8 +97,8 @@
           id="requester-name"
           bind:value="{form['Requester Name']}"
         />
-
-        <Field label="Request/Issue" for="request-issue">
+        <div class="field">
+          <label for="request-issue" class="label">Request/Issue</label>
           <textarea
             id="request-issue"
             name="request-issue-text"
@@ -105,8 +106,9 @@
             bind:value="{form['Request/Issue']}"
             rows="3"
           ></textarea>
-        </Field>
-        <Field label="Initial Note" for="initial-note">
+        </div>
+        <div class="field">
+          <label for="initial-note" class="label">Initial Note</label>
           <textarea
             id="initial-note"
             name="initial-note-text"
@@ -114,7 +116,7 @@
             bind:value="{form['Initial Note']}"
             rows="4"
           ></textarea>
-        </Field>
+        </div>
 
       </div>
       <div class="panel2-right">
@@ -123,7 +125,8 @@
           id="issue-full-dddress"
           bind:value="{form['Issue Full Address']}"
         />
-        <Field label="Additional Location Info">
+        <div class="field">
+          <label for="additional-location-info" class="label">Additional Location Info</label>
           <textarea
             id="additional-location-info"
             name="additional-location-info"
@@ -131,12 +134,12 @@
             bind:value="{form['Additional Location Info']}"
             rows="2"
           ></textarea>
-        </Field>
+        </div>
+
       </div>
     </div>
     <div class="panel-bottom">
-      <Button {disabled} type="is-primary" size="is-medium" nativeType="submit">Submit</Button>
-
+      <Button {disabled} type="is-primary" size="is-medium" nativeType="submit">New</Button>
     </div>
   </div>
 </form>

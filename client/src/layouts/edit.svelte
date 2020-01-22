@@ -22,7 +22,8 @@
 </style>
 
 <script>
-  import { Button } from 'svelma'
+  import { Snackbar } from 'svelma'
+  import Button from 'svelma/src/components/Button.svelte'
   import DateTimeInput from '../components/dateTimeInput.svelte'
   import OrganizationSelect from '../components/organizationSelect.svelte'
   import ContactSelect from '../components/contactSelect.svelte'
@@ -34,6 +35,7 @@
   let statuses = ['Open', 'Closed']
   let form
   let location
+  let loading = false
 
   onMount(async () => {
     //load form data from endpoint
@@ -68,6 +70,7 @@
   let disabled = false
 
   async function handleSubmit() {
+    loading = true
     await fetch(`http://localhost:5000/requests/${currentRoute.namedParams.id}`, {
       headers: {
         Accept: 'application/json',
@@ -77,14 +80,20 @@
       body: JSON.stringify(form)
     })
       .then(res => res.json())
-      .then(data => {
-        //disable submit for a second
-      })
       .catch(err => {
         //error message
-        disabled = false
         console.log('failed update', err.message)
       })
+    disabled = false
+    setTimeout(() => {
+      loading = false
+      Snackbar.create({
+        message: 'Updated',
+        type: 'is-white',
+        position: 'is-top-right',
+        duration: 1000
+      })
+    }, 500)
   }
 </script>
 
@@ -93,7 +102,6 @@
 
 {#if form}
   <form on:submit|preventDefault="{handleSubmit}">
-
     <div class="form-panel">
       <div class="panel-top">
         <div class="panel2-left">
@@ -166,11 +174,12 @@
         </div>
       </div>
       <div class="panel-bottom">
-        <Button {disabled} type="is-primary" size="is-medium" nativeType="submit">Update</Button>
+        <Button {disabled} {loading} type="is-primary" size="is-medium" nativeType="submit">
+          Update
+        </Button>
 
       </div>
     </div>
-
   </form>
 {:else}
   <p>...loading</p>
