@@ -18,15 +18,10 @@ const {
 class Database {
   constructor() {
     //init database
-    this.sequelize = new Sequelize(
-      POSTGRES_DBNAME,
-      POSTGRES_USER,
-      POSTGRES_PASS,
-      {
-        host: 'postgres',
-        dialect: 'postgres'
-      }
-    )
+    this.sequelize = new Sequelize(POSTGRES_DBNAME, POSTGRES_USER, POSTGRES_PASS, {
+      host: 'postgres',
+      dialect: 'postgres'
+    })
 
     this.Organization = OrganizationModel(this.sequelize, Sequelize)
     this.Contact = ContactModel(this.sequelize, Sequelize)
@@ -77,8 +72,7 @@ class Database {
       .then(records => {
         return records.map(({ fields, id }) => ({
           id,
-          organizations:
-            'Primary Agency' in fields ? fields['Primary Agency'] : [],
+          organizations: 'Primary Agency' in fields ? fields['Primary Agency'] : [],
           contacts: 'Requester Name' in fields ? fields['Requester Name'] : [],
           updates: 'Updates' in fields ? fields['Updates'] : [],
           address: fields['Issue Full Address'],
@@ -87,13 +81,7 @@ class Database {
       })
       .then(records =>
         model.bulkCreate(records, {
-          updateOnDuplicate: [
-            'organizations',
-            'contacts',
-            'updates',
-            'address',
-            'json'
-          ]
+          updateOnDuplicate: ['organizations', 'contacts', 'updates', 'address', 'json']
         })
       )
       .then(async records => {
@@ -101,9 +89,7 @@ class Database {
         const geocodedRecords = await Promise.all(
           records
             .filter(record => {
-              return (
-                record.dataValues.address !== record.dataValues.last_address
-              )
+              return record.dataValues.address !== record.dataValues.last_address
             })
             .map(async record => {
               const geocodedRecord = record.dataValues
@@ -130,8 +116,7 @@ class Database {
     }).then(async ({ fields, id }) =>
       model.create({
         id,
-        organizations:
-          'Primary Agency' in fields ? fields['Primary Agency'] : [],
+        organizations: 'Primary Agency' in fields ? fields['Primary Agency'] : [],
         contacts: 'Requester Name' in fields ? fields['Requester Name'] : [],
         updates: 'Updates' in fields ? fields['Updates'] : [],
         address: fields['Issue Full Address'],
@@ -144,22 +129,18 @@ class Database {
 
   editRequest(model, editRecord, recordId) {
     return new Promise((resolve, reject) => {
-      this.airtable
-        .base('Requests')
-        .update(recordId, editRecord, (err, record) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(record)
-        })
+      this.airtable.base('Requests').update(recordId, editRecord, (err, record) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(record)
+      })
     })
       .then(async ({ fields, id }) =>
         model.update(
           {
-            organizations:
-              'Primary Agency' in fields ? fields['Primary Agency'] : [],
-            contacts:
-              'Requester Name' in fields ? fields['Requester Name'] : [],
+            organizations: 'Primary Agency' in fields ? fields['Primary Agency'] : [],
+            contacts: 'Requester Name' in fields ? fields['Requester Name'] : [],
             updates: 'Updates' in fields ? fields['Updates'] : [],
             address: fields['Issue Full Address'],
             json: JSON.stringify(fields)
@@ -215,14 +196,12 @@ class Database {
 
   editRecordJSON(tableName, model, newRecord, recordId) {
     return new Promise((resolve, reject) => {
-      this.airtable
-        .base(tableName)
-        .update(recordId, newRecord, (err, record) => {
-          if (err) {
-            reject(err)
-          }
-          resolve(record)
-        })
+      this.airtable.base(tableName).update(recordId, newRecord, (err, record) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(record)
+      })
     })
       .then(({ fields, id }) =>
         model.update(
@@ -257,7 +236,7 @@ class Database {
   sync() {
     this.updateTableJSON('Updates', this.Update)
     this.updateTableJSON('Contacts', this.Contact)
-    this.updateTableJSON('Organization', this.Organization)
+    this.updateTableJSON('Organizations', this.Organization)
     this.updateTableRequest(this.Request)
   }
 }

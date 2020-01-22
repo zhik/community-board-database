@@ -16,37 +16,18 @@ router.get(
   '/:request_id',
   asyncMiddleware(async (req, res, next) => {
     const { request_id } = req.params
-    const request = await database.Request.findByPk(request_id).then(
-      async request => {
-        //look up relationships
-        const o = request.toJSON()
-        if (o.updates) {
-          o.updates = await database.Update.findAll({
-            where: {
-              id: o.updates
-            }
-          })
-        }
-
-        if (o.organizations) {
-          o.organizations = await database.Organization.findAll({
-            where: {
-              id: o.organizations
-            }
-          })
-        }
-
-        if (o.contacts) {
-          o.contacts = await database.Contact.findAll({
-            where: {
-              id: o.organizations
-            }
-          })
-        }
-
-        return o
+    const request = await database.Request.findByPk(request_id).then(async request => {
+      //look up relationships
+      const o = request.toJSON()
+      if (o.updates) {
+        o.updates = await database.Update.findAll({
+          where: {
+            id: o.updates
+          }
+        })
       }
-    )
+      return o
+    })
     res.json(request)
   })
 )
@@ -63,11 +44,7 @@ router.put(
   '/:request_id',
   asyncMiddleware(async (req, res, next) => {
     const { request_id } = req.params
-    const request = await database.editRequest(
-      database.Request,
-      req.body,
-      request_id
-    )
+    const request = await database.editRequest(database.Request, req.body, request_id)
     res.json(request)
   })
 )
