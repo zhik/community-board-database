@@ -31,6 +31,7 @@
     shadowUrl: markerShadow
   })
 
+  export let zoom = false
   export let data = {
     type: 'FeatureCollection',
     features: []
@@ -66,6 +67,9 @@
 
     const group = new L.featureGroup([layer])
     map.fitBounds(group.getBounds())
+    if (zoom) {
+      map.setZoom(zoom)
+    }
   }
 </script>
 
