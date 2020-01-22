@@ -6,17 +6,31 @@
 
 <script>
   import Leaflet from '../components/leaflet.svelte'
-  import { Field } from 'svelma'
   import Select from 'svelte-select'
 
   export let label
   export let id
   export let value
+  export let initLocation
 
-  let selectedValue = undefined
+  let selectedValue
+  let placeholder = 'Search an address'
+
   let geojson = {
     type: 'FeatureCollection',
     features: []
+  }
+
+  $: {
+    if (initLocation && initLocation.geometry) {
+      geojson = {
+        type: 'FeatureCollection',
+        features: [initLocation]
+      }
+    }
+    if (initLocation && initLocation.properties) {
+      placeholder = initLocation.properties.label
+    }
   }
 
   $: {
@@ -56,14 +70,17 @@
 <div class="map-div">
   <Leaflet data="{geojson}" zoom="{15}" />
 </div>
-<Field {label} style="margin-top: 0.8rem;">
+
+<div class="field" style="margin-top: 0.8rem;">
+  <label for="{id}" class="label">{label}</label>
   <Select
+    {id}
+    {placeholder}
     {loadOptions}
     {optionIdentifier}
     {getOptionLabel}
     {getSelectionLabel}
     bind:selectedValue
-    placeholder="Search an address"
     noOptionsMessage="No addresses found"
   />
-</Field>
+</div>

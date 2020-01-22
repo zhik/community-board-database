@@ -5,12 +5,12 @@ export default async function sync() {
   //todo: get url from env
   const SYNC_URL = 'http://localhost:5000'
 
-  const loading = Snackbar.create({
-    message: '...loading data',
-    type: 'is-white',
-    position: 'is-top-right',
-    duration: 100000
-  })
+  // const loading = Snackbar.create({
+  //   message: '...loading data',
+  //   type: 'is-white',
+  //   position: 'is-top-right',
+  //   duration: 100000
+  // })
 
   //get all
   const syncItems = [
@@ -35,15 +35,15 @@ export default async function sync() {
 
   await Promise.all(syncFetches)
     .then(() => {
-      loading.$destroy()
+      //loading.$destroy()
     })
     .catch(error => {
-      loading.$destroy()
-      Snackbar.create({
-        message: error.message,
-        type: 'is-danger',
-        actionText: 'retry',
-        position: 'is-top-right'
-      })
+      // loading.$destroy()
+      // Snackbar.create({
+      //   message: error.message,
+      //   type: 'is-danger',
+      //   actionText: 'retry',
+      //   position: 'is-top-right'
+      // })
     })
 }

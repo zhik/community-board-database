@@ -5,7 +5,6 @@
 </style>
 
 <script>
-  import { Field } from 'svelma'
   import dateFormat from '../utils/dateFormat'
 
   export let datetime
@@ -26,7 +25,7 @@
 </script>
 
 <label for="{id}" class="{id} label">{label}</label>
-<Field grouped>
+<div class="field">
   <input id="input-date" min="2000-01-01" type="date" bind:value="{date}" aria-label="{label}" />
   <input id="input-time" type="time" bind:value="{time}" aria-label="{label}" />
-</Field>
+</div>

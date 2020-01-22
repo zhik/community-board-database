@@ -8,7 +8,7 @@
   import { Navigate } from 'svelte-router-spa'
   import { requests } from '../stores'
 
-  let requestsList = $requests.map(request => {
+  $: requestsList = $requests.map(request => {
     request.name = inObj(request.json, 'Request/Issue', '<no name>')
     request.href = `/browse/request/${request.id}`
     return request

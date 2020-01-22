@@ -1,6 +1,5 @@
 <script>
   import { tick } from 'svelte'
-  import { Field } from 'svelma'
   import Select from 'svelte-select'
   import { organizations } from '../stores'
   import inObj from '../utils/inObj'
@@ -37,7 +36,8 @@
   }
 </script>
 
-<Field {label}>
+<div class="field">
+  <label for="{id}" class="label">{label}</label>
   <Select
     {loadOptions}
     {optionIdentifier}
@@ -47,4 +47,4 @@
     bind:selectedValue
     placeholder="Search for Organizations"
   />
-</Field>
+</div>

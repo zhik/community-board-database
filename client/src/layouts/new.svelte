@@ -1,7 +1,4 @@
 <style>
-  .form-panel {
-  }
-
   .panel-top {
     display: flex;
     flex-wrap: wrap;
