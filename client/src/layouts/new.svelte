@@ -11,22 +11,19 @@
   }
 
   .panel-right {
-    margin-top: 1em;
-    flex: 1 1 auto;
-    min-width: 20em;
+    flex: 2 1 auto;
+    min-width: 25em;
     height: 30em;
-  }
-
-  textarea {
-    width: 30em;
-    height: 5em;
+    margin: 1em auto;
   }
 </style>
 
 <script>
   import { Field, Input } from 'svelma'
   import DateTimeInput from '../components/dateTimeInput.svelte'
-  import Leaflet from '../components/leaflet.svelte'
+  import OrganizationSelect from '../components/organizationSelect.svelte'
+  import ContactSelect from '../components/contactSelect.svelte'
+  import AddressSearch from '../components/addressSearch.svelte'
 
   //todo- fix label for - a11y for svelma
   let statuses = ['Open', 'Closed']
@@ -35,7 +32,10 @@
     Status: statuses[0],
     'Request/Issue': '',
     'Date Opened': null,
-    'Initial Note': ''
+    'Initial Note': '',
+    'Primary Agency': [],
+    'Requester Name': [],
+    'Issue Full Address': ''
   }
 
   $: console.log(form)
@@ -64,6 +64,17 @@
       </div>
     </Field>
     <DateTimeInput label="Date Opened" id="date-opened" bind:datetime="{form['Date Opened']}" />
+    <OrganizationSelect
+      label="Primary Agency"
+      id="primary-agency"
+      bind:value="{form['Primary Agency']}"
+    />
+    <ContactSelect
+      label="Requester Name"
+      id="requester-name"
+      bind:value="{form['Requester Name']}"
+    />
+
     <Field label="Request/Issue" for="request-issue">
       <textarea
         id="request-issue"
@@ -82,7 +93,10 @@
     </Field>
   </div>
   <div class="panel-right">
-    <Leaflet />
-
+    <AddressSearch
+      label="Issue Full Address"
+      id="issue-full-dddress"
+      bind:value="{form['Issue Full Address']}"
+    />
   </div>
 </form>

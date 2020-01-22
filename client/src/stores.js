@@ -1,7 +1,5 @@
 import { readable, writable, derived } from 'svelte/store'
 
-export const count = writable(0)
-
 function createRequests() {
   const { subscribe, set, update } = writable([])
   return {
@@ -46,3 +44,15 @@ export const requestsPoints = derived(requests, $requests => {
       }, [])
   }
 })
+
+function createTagStore() {
+  const { subscribe, set, update } = writable([])
+  return {
+    subscribe,
+    set,
+    reset: () => set([])
+  }
+}
+
+export const organizations = createTagStore()
+export const contacts = createTagStore()
