@@ -1,10 +1,9 @@
 import { Snackbar } from 'svelma'
 import { requests, organizations, contacts } from '../stores'
+import API from './api'
 
 export default async function sync() {
   //todo: get url from env
-  const SYNC_URL = 'http://localhost:5000'
-
   const loading = Snackbar.create({
     message: '...loading data',
     type: 'is-white',
@@ -20,8 +19,7 @@ export default async function sync() {
   ]
 
   const syncFetches = syncItems.map(item =>
-    fetch(`${SYNC_URL}/${item.id}`)
-      .then(res => res.json())
+    API(`api/${item.id}`)
       .then(data => {
         return data.map(i => {
           i.json = JSON.parse(i.json)

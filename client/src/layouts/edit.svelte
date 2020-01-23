@@ -30,6 +30,7 @@
   import AddressSearch from '../components/addressSearch.svelte'
   import { navigateTo } from 'svelte-router-spa'
   import { onMount } from 'svelte'
+  import API from '../utils/api'
 
   export let currentRoute
   let statuses = ['Open', 'Closed']
@@ -39,12 +40,10 @@
 
   onMount(async () => {
     //load form data from endpoint
-    const data = await fetch(`http://localhost:5000/requests/${currentRoute.namedParams.id}`)
-      .then(res => res.json())
-      .then(data => {
-        data.json = JSON.parse(data.json)
-        return data
-      })
+    const data = await API(`api/requests/${currentRoute.namedParams.id}`).then(data => {
+      data.json = JSON.parse(data.json)
+      return data
+    })
 
     let defaults = {
       Status: statuses[0],
@@ -71,19 +70,17 @@
 
   async function handleSubmit() {
     loading = true
-    await fetch(`http://localhost:5000/requests/${currentRoute.namedParams.id}`, {
+    await API(`api/requests/${currentRoute.namedParams.id}`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
       method: 'PUT',
       body: JSON.stringify(form)
+    }).catch(err => {
+      //error message
+      console.log('failed update', err.message)
     })
-      .then(res => res.json())
-      .catch(err => {
-        //error message
-        console.log('failed update', err.message)
-      })
     disabled = false
     setTimeout(() => {
       loading = false

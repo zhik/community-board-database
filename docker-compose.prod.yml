@@ -1,0 +1,24 @@
+version: '3'
+services:
+  postgres:
+    image: kartoza/postgis:12.0
+    hostname: postgres
+    ports:
+      - 5432:5432
+    container_name: community-board-db-prod-postgres
+    env_file:
+      - .env
+  app:
+    build: .
+    ports:
+      - 80:5000
+    restart: always
+    container_name: community-board-db-prod-app
+    depends_on:
+      - postgres
+    environment:
+      WAIT_HOSTS: postgres:5432
+      WAIT_AFTER_HOSTS: 1
+      API_HOST: http://localhost
+    env_file:
+      - .env

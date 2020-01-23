@@ -28,6 +28,7 @@
   import ContactSelect from '../components/contactSelect.svelte'
   import AddressSearch from '../components/addressSearch.svelte'
   import { navigateTo } from 'svelte-router-spa'
+  import API from '../utils/api'
 
   //todo- fix label for - a11y for svelma
   let statuses = ['Open', 'Closed']
@@ -46,7 +47,7 @@
   let disabled = false
 
   async function handleSubmit() {
-    fetch(`http://localhost:5000/requests`, {
+    API(`api/requests`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
@@ -54,7 +55,6 @@
       method: 'POST',
       body: JSON.stringify(form)
     })
-      .then(res => res.json())
       .then(data => {
         //redirect
         setTimeout(() => {
